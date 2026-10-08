@@ -1,0 +1,64 @@
+# Compiled class files
+*.class
+
+# Log files
+*.log
+
+# Package files
+*.jar
+*.war
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# Virtual machine crash logs
+hs_err_pid*
+
+# Spring Boot specific
+activemq-data/
+plain-data/
+
+# IDEs (IntelliJ IDEA, Eclipse, VS Code)
+.idea/
+*.iml
+*.ipr
+*.iws
+.out
+.metadata/
+bin/
+tmp/
+*.tmp
+*.bak
+*.swp
+*~
+.settings/
+.project
+.classpath
+.factorypath
+.springBeans
+.sts4-cache/
+.vscode/
+
+# Build systems (Maven & Gradle)
+target/
+.gradle/
+build/
+.mvn/timing.properties
+hs_err_pid*
+
+# Operating System files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+Desktop.ini
+
+# Configuration or secrets (nên bỏ qua file cấu hình nhạy cảm)
+application-local.properties
+application-local.yml
+secrets.yml
+*.env
