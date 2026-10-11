@@ -1,9 +1,10 @@
-﻿package com.interacthub.entity;
+package com.interacthub.entity;
 
 import com.interacthub.entity.enums.NotificationType;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.*;
+import java.util.UUID;
 
 @Entity
 @Table(name = "notifications", indexes = @Index(columnList = "user_id, is_read"))

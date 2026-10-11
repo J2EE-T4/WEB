@@ -1,4 +1,4 @@
-﻿package com.interacthub.exception;
+package com.interacthub.exception;
 public class ResourceNotFoundException extends RuntimeException {
     public ResourceNotFoundException(String message) { super(message); }
     public ResourceNotFoundException(String resource, String field, Object value) {

@@ -1,4 +1,4 @@
-﻿package com.interacthub.entity;
+package com.interacthub.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
@@ -13,6 +13,7 @@ public class User {
 
     @Id
     @Column(length = 36)
+    @Builder.Default
     private String id = UUID.randomUUID().toString();
 
     @Column(nullable = false, unique = true, length = 50)

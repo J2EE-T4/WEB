@@ -1,4 +1,4 @@
-﻿package com.interacthub.service;
+package com.interacthub.service;
 
 import com.interacthub.entity.Hashtag;
 import com.interacthub.repository.HashtagRepository;

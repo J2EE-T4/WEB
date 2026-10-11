@@ -1,4 +1,4 @@
-﻿package com.interacthub.service;
+package com.interacthub.service;
 
 import com.interacthub.dto.auth.*;
 import com.interacthub.entity.User;

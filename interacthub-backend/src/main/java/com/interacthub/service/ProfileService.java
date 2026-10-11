@@ -1,4 +1,4 @@
-﻿package com.interacthub.service;
+package com.interacthub.service;
 
 import com.interacthub.dto.post.UserResponse;
 import com.interacthub.dto.profile.*;

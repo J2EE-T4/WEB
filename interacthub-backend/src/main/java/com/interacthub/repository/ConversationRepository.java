@@ -1,7 +1,8 @@
-﻿package com.interacthub.repository;
+package com.interacthub.repository;
 
 import com.interacthub.entity.Conversation;
 import org.springframework.data.jpa.repository.*;
+import org.springframework.data.repository.query.Param;
 import java.util.*;
 
 public interface ConversationRepository extends JpaRepository<Conversation, String> {

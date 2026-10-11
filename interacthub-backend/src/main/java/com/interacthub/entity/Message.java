@@ -1,8 +1,9 @@
-﻿package com.interacthub.entity;
+package com.interacthub.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.*;
+import java.util.UUID;
 
 @Entity
 @Table(name = "messages", indexes = {

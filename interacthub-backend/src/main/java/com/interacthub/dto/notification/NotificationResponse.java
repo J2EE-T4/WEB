@@ -1,4 +1,4 @@
-﻿package com.interacthub.dto.notification;
+package com.interacthub.dto.notification;
 import com.interacthub.dto.post.UserResponse;
 import lombok.*;
 import java.time.LocalDateTime;

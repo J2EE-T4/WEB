@@ -1,4 +1,4 @@
-﻿package com.interacthub.config;
+package com.interacthub.config;
 
 import com.interacthub.entity.User;
 import com.interacthub.repository.UserRepository;

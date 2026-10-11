@@ -1,4 +1,4 @@
-﻿package com.interacthub.security;
+package com.interacthub.security;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;

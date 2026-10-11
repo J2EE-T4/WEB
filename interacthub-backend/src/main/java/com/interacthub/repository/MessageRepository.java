@@ -1,8 +1,9 @@
-﻿package com.interacthub.repository;
+package com.interacthub.repository;
 
 import com.interacthub.entity.Message;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.*;
+import org.springframework.data.repository.query.Param;
 import java.time.LocalDateTime;
 import java.util.List;
 

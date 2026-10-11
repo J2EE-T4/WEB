@@ -1,4 +1,4 @@
-﻿package com.interacthub.dto.story;
+package com.interacthub.dto.story;
 import com.interacthub.dto.post.UserResponse;
 import lombok.*;
 import java.time.LocalDateTime;

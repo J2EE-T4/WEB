@@ -1,4 +1,4 @@
-﻿package com.interacthub.config;
+package com.interacthub.config;
 
 import com.interacthub.security.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;

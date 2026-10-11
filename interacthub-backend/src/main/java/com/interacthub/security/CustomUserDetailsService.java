@@ -1,4 +1,4 @@
-﻿package com.interacthub.security;
+package com.interacthub.security;
 
 import com.interacthub.entity.User;
 import com.interacthub.repository.UserRepository;

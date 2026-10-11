@@ -1,4 +1,4 @@
-﻿package com.interacthub.repository;
+package com.interacthub.repository;
 
 import com.interacthub.entity.PostReport;
 import org.springframework.data.jpa.repository.*;

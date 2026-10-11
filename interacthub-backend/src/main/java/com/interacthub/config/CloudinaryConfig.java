@@ -1,4 +1,4 @@
-﻿package com.interacthub.config;
+package com.interacthub.config;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;

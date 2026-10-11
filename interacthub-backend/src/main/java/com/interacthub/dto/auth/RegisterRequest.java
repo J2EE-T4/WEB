@@ -1,4 +1,4 @@
-﻿package com.interacthub.dto.auth;
+package com.interacthub.dto.auth;
 import jakarta.validation.constraints.*;
 public record RegisterRequest(
     @NotBlank @Size(min = 3, max = 50) String username,

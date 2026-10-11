@@ -1,4 +1,4 @@
-﻿package com.interacthub.entity;
+package com.interacthub.entity;
 
 import com.interacthub.entity.enums.MediaType;
 import jakarta.persistence.*;

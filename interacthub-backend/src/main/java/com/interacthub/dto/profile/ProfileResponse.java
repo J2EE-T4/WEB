@@ -1,4 +1,4 @@
-﻿package com.interacthub.dto.profile;
+package com.interacthub.dto.profile;
 import lombok.*;
 import java.time.*;
 

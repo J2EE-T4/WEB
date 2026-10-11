@@ -1,4 +1,4 @@
-﻿package com.interacthub.dto.chat;
+package com.interacthub.dto.chat;
 import com.interacthub.dto.post.UserResponse;
 import lombok.*;
 

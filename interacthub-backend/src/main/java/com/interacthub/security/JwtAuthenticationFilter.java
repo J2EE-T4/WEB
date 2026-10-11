@@ -1,4 +1,4 @@
-﻿package com.interacthub.security;
+package com.interacthub.security;
 
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;

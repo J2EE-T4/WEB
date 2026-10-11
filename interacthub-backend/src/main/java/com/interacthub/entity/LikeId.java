@@ -1,4 +1,4 @@
-﻿package com.interacthub.entity;
+package com.interacthub.entity;
 
 import jakarta.persistence.*;
 import lombok.*;

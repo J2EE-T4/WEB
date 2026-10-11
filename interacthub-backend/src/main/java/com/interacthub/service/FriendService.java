@@ -1,4 +1,4 @@
-﻿package com.interacthub.service;
+package com.interacthub.service;
 
 import com.interacthub.dto.friend.FriendDto;
 import com.interacthub.entity.*;

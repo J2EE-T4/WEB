@@ -1,4 +1,4 @@
-﻿package com.interacthub.exception;
+package com.interacthub.exception;
 public class DuplicateResourceException extends RuntimeException {
     public DuplicateResourceException(String message) { super(message); }
 }

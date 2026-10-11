@@ -1,4 +1,4 @@
-﻿package com.interacthub.entity;
+package com.interacthub.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;

@@ -1,4 +1,4 @@
-﻿package com.interacthub.dto.moderation;
+package com.interacthub.dto.moderation;
 import com.interacthub.dto.post.UserResponse;
 import lombok.*;
 import java.time.LocalDateTime;
