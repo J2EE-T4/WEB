@@ -1,7 +1,5 @@
 # 🌐 InteractHub Backend (Java Spring Boot 3.x)
 
----
-
 ## 🛠️ Công nghệ Sử dụng (Tech Stack)
 
 | Hạng mục                  | Công nghệ                                      |    Phiên bản     |
