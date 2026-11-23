@@ -9,22 +9,33 @@ import com.interacthub.exception.*;
 import com.interacthub.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import java.time.*;
 import java.util.*;
 import java.util.regex.*;
-import java.util.stream.Collectors;
 
-@Service @RequiredArgsConstructor @Slf4j
+/**
+ * Service quản lý bài viết — tích hợp Redis blacklist cho feed.
+ * Tương đương PostService.cs + PostRepository.cs (.NET).
+ *
+ * getFeed() đọc "blacklisted_posts" Redis Set để loại bỏ bài bị report nhiều.
+ */
+@Service
+@RequiredArgsConstructor
+@Slf4j
 public class PostService {
     private final PostRepository postRepository;
     private final UserRepository userRepository;
     private final HashtagService hashtagService;
     private final CloudinaryService cloudinaryService;
+    private final StringRedisTemplate stringRedisTemplate;
 
+    private static final String BLACKLISTED_POSTS_KEY = "blacklisted_posts";
     private static final Pattern HASHTAG_PATTERN = Pattern.compile("(?:^|\\s)#([a-zA-Z0-9_]+)");
 
     public UserResponse toUserResponse(User u) {
@@ -84,7 +95,10 @@ public class PostService {
         if (content != null) {
             Matcher matcher = HASHTAG_PATTERN.matcher(content);
             while (matcher.find()) {
-                Hashtag hashtag = hashtagService.getOrCreateHashtag(matcher.group(1));
+                String tag = matcher.group(1);
+                Hashtag hashtag = hashtagService.getOrCreateHashtag(tag);
+                // Increment Redis trending score
+                hashtagService.incrementHashtag(tag);
                 PostHashtag ph = PostHashtag.builder().id(new PostHashtagId(post.getId(), hashtag.getId())).post(post).hashtag(hashtag).build();
                 post.getPostHashtags().add(ph);
             }
@@ -104,9 +118,25 @@ public class PostService {
             .repostCount(pr.getRepostCount()).liked(pr.isLiked()).parentPost(pr.getParentPost()).comments(comments).build();
     }
 
+    /**
+     * Lấy feed bài viết, loại bỏ bài bị blacklist (Redis Set "blacklisted_posts").
+     * Tương đương PostRepository.GetPostsAsync() trong .NET đọc blacklisted_posts.
+     */
     public PagedResponse<PostResponse> getFeed(String currentUserId, LocalDateTime lastTimestamp, int limit) {
         LocalDateTime cursor = lastTimestamp != null ? lastTimestamp : LocalDateTime.now(ZoneOffset.UTC);
-        List<Post> posts = postRepository.findFeedPosts(cursor, PageRequest.of(0, limit + 1));
+
+        // Đọc blacklisted posts từ Redis
+        Set<String> blacklistedIds = stringRedisTemplate.opsForSet().members(BLACKLISTED_POSTS_KEY);
+        List<String> blacklist = (blacklistedIds != null && !blacklistedIds.isEmpty())
+                ? new ArrayList<>(blacklistedIds) : List.of();
+
+        List<Post> posts;
+        if (blacklist.isEmpty()) {
+            posts = postRepository.findFeedPosts(cursor, PageRequest.of(0, limit + 1));
+        } else {
+            posts = postRepository.findFeedPostsExcluding(cursor, blacklist, PageRequest.of(0, limit + 1));
+        }
+
         boolean hasMore = posts.size() > limit;
         if (hasMore) posts = posts.subList(0, limit);
         List<PostResponse> data = posts.stream().map(p -> toPostResponse(p, currentUserId)).toList();

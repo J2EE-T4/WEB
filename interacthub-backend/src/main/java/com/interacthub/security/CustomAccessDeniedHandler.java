@@ -1,0 +1,40 @@
+package com.interacthub.security;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.interacthub.exception.GlobalExceptionHandler.ErrorResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.MediaType;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.stereotype.Component;
+
+import java.io.IOException;
+import java.time.LocalDateTime;
+
+@Component
+@Slf4j
+public class CustomAccessDeniedHandler implements AccessDeniedHandler {
+
+    private final ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
+
+    @Override
+    public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException)
+            throws IOException {
+        log.warn("Access denied error: {} on URI: {}", accessDeniedException.getMessage(), request.getRequestURI());
+
+        response.setContentType("application/json;charset=UTF-8");
+        response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+
+        ErrorResponse errorResponse = new ErrorResponse(
+                HttpServletResponse.SC_FORBIDDEN,
+                "Access is denied: You do not have permission to access this resource",
+                null,
+                LocalDateTime.now()
+        );
+
+        response.getWriter().write(objectMapper.writeValueAsString(errorResponse));
+    }
+}

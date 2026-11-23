@@ -6,6 +6,7 @@ import com.interacthub.entity.*;
 import com.interacthub.exception.*;
 import com.interacthub.repository.*;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,8 +15,13 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.*;
 
+/**
+ * Service quản lý chat conversations và messages.
+ * Tương đương ChatService.cs trong .NET.
+ */
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ChatService {
     private final ConversationRepository conversationRepository;
     private final MessageRepository messageRepository;
@@ -41,6 +47,10 @@ public class ChatService {
     private String[] normalizeIds(String id1, String id2) {
         return id1.compareTo(id2) < 0 ? new String[]{id1, id2} : new String[]{id2, id1};
     }
+
+    // ══════════════════════════════════════════════════════
+    // REST API methods (giữ nguyên từ Phase 1)
+    // ══════════════════════════════════════════════════════
 
     public List<ConversationDto> getConversations(String userId) {
         List<Conversation> convs = conversationRepository.findAllByUserId(userId);
@@ -138,5 +148,62 @@ public class ChatService {
         Conversation conv = conversationRepository.findById(convId)
             .orElseThrow(() -> new ResourceNotFoundException("Conversation", "id", convId));
         return conv.getUser1().getId().equals(userId) || conv.getUser2().getId().equals(userId);
+    }
+
+    // ══════════════════════════════════════════════════════
+    // WebSocket methods — mới cho Phase 3
+    // ══════════════════════════════════════════════════════
+
+    /**
+     * Gửi tin nhắn và lưu DB. Được gọi từ ChatWebSocketHandler.
+     * Tương đương ChatService.SendMessageAsync() trong .NET.
+     */
+    @Transactional
+    public MessageDto sendMessage(String senderId, SendMessageRequest request) {
+        User sender = userRepository.findById(senderId).orElse(null);
+        if (sender == null) return null;
+
+        // Lấy hoặc tạo conversation
+        String[] sorted = normalizeIds(senderId, request.receiverId());
+        Optional<Conversation> existing = conversationRepository.findByUser1IdAndUser2Id(sorted[0], sorted[1]);
+
+        Conversation conv;
+        if (existing.isPresent()) {
+            conv = existing.get();
+        } else {
+            User receiver = userRepository.findById(request.receiverId())
+                    .orElseThrow(() -> new ResourceNotFoundException("User", "id", request.receiverId()));
+            conv = Conversation.builder()
+                    .id(UUID.randomUUID().toString())
+                    .user1(sorted[0].equals(senderId) ? sender : receiver)
+                    .user2(sorted[1].equals(senderId) ? sender : receiver)
+                    .createdAt(LocalDateTime.now(ZoneOffset.UTC))
+                    .build();
+            conversationRepository.save(conv);
+        }
+
+        Message message = Message.builder()
+                .id(UUID.randomUUID().toString())
+                .conversation(conv)
+                .sender(sender)
+                .content(request.content().trim())
+                .createdAt(LocalDateTime.now(ZoneOffset.UTC))
+                .isRead(false)
+                .build();
+        messageRepository.save(message);
+
+        log.debug("Message {} saved in conversation {}", message.getId(), conv.getId());
+
+        return toMessageDto(message);
+    }
+
+    /**
+     * Lấy conversation ID cho cặp user (normalize thứ tự).
+     */
+    public String getConversationIdForUsers(String userId1, String userId2) {
+        String[] sorted = normalizeIds(userId1, userId2);
+        return conversationRepository.findByUser1IdAndUser2Id(sorted[0], sorted[1])
+                .map(Conversation::getId)
+                .orElse(null);
     }
 }

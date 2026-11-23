@@ -9,4 +9,5 @@ public class ReportedPostSummaryDto {
     private UserResponse postAuthor;
     private long reportCount;
     private LocalDateTime lastReportedAt;
+    private boolean isBlacklisted;
 }

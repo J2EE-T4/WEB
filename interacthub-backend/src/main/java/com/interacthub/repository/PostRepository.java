@@ -15,6 +15,9 @@ public interface PostRepository extends JpaRepository<Post, String> {
     @Query("SELECT p FROM Post p JOIN FETCH p.user LEFT JOIN FETCH p.postMedias WHERE p.createdAt < :cursor ORDER BY p.createdAt DESC")
     List<Post> findFeedPosts(@Param("cursor") LocalDateTime cursor, Pageable pageable);
 
+    @Query("SELECT p FROM Post p JOIN FETCH p.user LEFT JOIN FETCH p.postMedias WHERE p.createdAt < :cursor AND p.id NOT IN :blacklistedIds ORDER BY p.createdAt DESC")
+    List<Post> findFeedPostsExcluding(@Param("cursor") LocalDateTime cursor, @Param("blacklistedIds") List<String> blacklistedIds, Pageable pageable);
+
     List<Post> findByUserIdOrderByCreatedAtDesc(String userId);
     long countByUserId(String userId);
 }
